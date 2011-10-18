@@ -21,7 +21,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
 BuildRequires: java-devel >= 0:1.6.0
-BuildRequires: jpackage-utils
+BuildRequires: jpackage-utils >= 0:1.7.5
 BuildRequires: maven2-plugin-antrun
 BuildRequires: maven2-plugin-assembly
 BuildRequires: maven2-plugin-compiler
@@ -35,9 +35,9 @@ BuildRequires: maven-plugin-bundle
 BuildRequires: maven-surefire-maven-plugin
 BuildRequires: maven-surefire-provider-junit
 Requires:      java >= 0:1.6.0
-Requires:      jpackage-utils
-Requires(post):jpackage-utils
-Requires(postun):jpackage-utils
+Requires:      jpackage-utils >= 0:1.7.5
+Requires(post):jpackage-utils >= 0:1.7.5
+Requires(postun):jpackage-utils >= 0:1.7.5
 
 Provides:      jakarta-%{short_name} = %{version}-%{release}
 Obsoletes:     jakarta-%{short_name} < %{version}-%{release}
@@ -53,7 +53,7 @@ Phonetic and URLs.
 %package javadoc
 Summary:       API documentation for %{name}
 Group:         Development/Java
-Requires:      jpackage-utils
+Requires:      jpackage-utils >= 0:1.7.5
 Obsoletes:     jakarta-%{short_name}-javadoc < %{version}-%{release}
 
 %description javadoc
