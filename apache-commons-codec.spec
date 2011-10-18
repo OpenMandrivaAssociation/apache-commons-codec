@@ -8,7 +8,7 @@
 
 Name:          apache-%{short_name}
 Version:       1.4
-Release:       12
+Release:       13
 Summary:       Implementations of common encoders and decoders
 Group:         Development/Java
 License:       ASL 2.0
