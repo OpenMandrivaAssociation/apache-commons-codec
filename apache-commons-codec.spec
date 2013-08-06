@@ -8,8 +8,8 @@
 
 Summary:	Implementations of common encoders and decoders
 Name:		apache-%{short_name}
-Version:	1.4
-Release:	15
+Version:	1.8
+Release:	1
 Group:		Development/Java
 License:	ASL 2.0
 Url:		http://commons.apache.org/%{base_name}/
@@ -18,18 +18,7 @@ BuildArch:	noarch
 
 BuildRequires:	java-devel >= 0:1.6.0
 BuildRequires:	jpackage-utils
-BuildRequires:	maven2-plugin-antrun
-BuildRequires:	maven2-plugin-assembly
-BuildRequires:	maven2-plugin-compiler
-BuildRequires:	maven2-plugin-idea
-BuildRequires:	maven2-plugin-install
-BuildRequires:	maven2-plugin-jar
-BuildRequires:	maven2-plugin-javadoc
-BuildRequires:	maven2-plugin-resources
-BuildRequires:	maven-doxia-sitetools
-BuildRequires:	maven-plugin-bundle
-BuildRequires:	maven-surefire-maven-plugin
-BuildRequires:	maven-surefire-provider-junit
+BuildRequires:	ant
 Requires:	java >= 0:1.6.0
 Requires:	jpackage-utils
 Requires(post):jpackage-utils
@@ -61,22 +50,17 @@ Obsoletes:	jakarta-%{short_name}-javadoc < %{version}-%{release}
 sed -i 's/\r//' RELEASE-NOTES*.txt LICENSE.txt NOTICE.txt
 
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-
-mvn-jpp \
-	-Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-	install javadoc:javadoc
+ant dist
 
 %install
 # jars
-install -pD -T target/%{short_name}-%{version}.jar \
+install -pD -T dist/%{short_name}-%{version}.jar \
 	%{buildroot}%{_javadir}/%{short_name}.jar
 (cd %{buildroot}%{_javadir} && for jar in *; do ln -sf ${jar} `echo $jar| sed "s|%{short_name}|%{name}|g"`; done)
 
 # javadocs
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
+cp -pr dist/docs/api/* %{buildroot}%{_javadocdir}/%{name}
 
 # pom
 install -pD -T -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{short_name}.pom
