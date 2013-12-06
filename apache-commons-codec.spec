@@ -9,7 +9,7 @@
 Summary:	Implementations of common encoders and decoders
 Name:		apache-%{short_name}
 Version:	1.8
-Release:	4
+Release:	5
 Group:		Development/Java
 License:	ASL 2.0
 Url:		http://commons.apache.org/%{base_name}/
