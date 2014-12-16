@@ -3,46 +3,31 @@
 %global short_name commons-%{base_name}
 
 Name:          apache-%{short_name}
-Version:       1.8
-Release:       5.1%{?dist}
+Version:       1.10
+Release:       1.1
+Group:         Development/Java
 Summary:       Implementations of common encoders and decoders
-
 License:       ASL 2.0
 URL:           http://commons.apache.org/%{base_name}/
+BuildArch:     noarch
 
 Source0:       http://archive.apache.org/dist/commons/%{base_name}/source/%{short_name}-%{version}-src.tar.gz
 # Data in DoubleMetaphoneTest.java originally has an inadmissible license.
 # The author gives MIT in e-mail communication.
 Source1:       aspell-mail.txt
 
-
-BuildArch:     noarch
-
-BuildRequires: java-devel
-BuildRequires: jpackage-utils
 BuildRequires: maven-local
-BuildRequires: maven-antrun-plugin
-BuildRequires: maven-assembly-plugin
-BuildRequires: maven-compiler-plugin
-BuildRequires: maven-install-plugin
-BuildRequires: maven-jar-plugin
-BuildRequires: maven-javadoc-plugin
-BuildRequires: maven-resources-plugin
-BuildRequires: maven-doxia-sitetools
-BuildRequires: maven-plugin-bundle
-BuildRequires: maven-surefire-plugin
-BuildRequires: maven-surefire-provider-junit4
-Requires:      java
-Requires:      jpackage-utils
+BuildRequires: mvn(org.apache.commons:commons-parent:pom:)
+BuildRequires: mvn(org.apache.maven.plugins:maven-assembly-plugin)
 
 # It looks like there are packages in F-18 that BR/R the short name
-Provides:      %{short_name} = %{version}-%{release}
-Obsoletes:     %{short_name} < %{version}-%{release}
+Provides: %{short_name} = %{version}-%{release}
+Obsoletes: %{short_name} < %{version}-%{release}
 # Provide and obsolete jakarta-commons-codec to support installing this
 # package on RHEL 6, which still uses the old jakarta-commons-* package
 # naming scheme.
-Provides:      jakarta-%{short_name} = %{version}-%{release}
-Obsoletes:     jakarta-%{short_name} < %{version}-%{release}
+Provides: jakarta-%{short_name} = %{version}-%{release}
+Obsoletes: jakarta-%{short_name} < %{version}-%{release}
 
 %description
 Commons Codec is an attempt to provide definitive implementations of
@@ -51,10 +36,8 @@ Phonetic and URLs.
 
 %package javadoc
 Summary:       API documentation for %{name}
-
-Requires:      jpackage-utils
-Provides:      jakarta-%{short_name}-javadoc = %{version}-%{release}
-Obsoletes:     jakarta-%{short_name}-javadoc < %{version}-%{release}
+Provides: jakarta-%{short_name}-javadoc = %{version}-%{release}
+Obsoletes: jakarta-%{short_name}-javadoc < %{version}-%{release}
 
 %description javadoc
 %{summary}.
@@ -64,36 +47,41 @@ Obsoletes:     jakarta-%{short_name}-javadoc < %{version}-%{release}
 cp %{SOURCE1} aspell-mail.txt
 sed -i 's/\r//' RELEASE-NOTES*.txt LICENSE.txt NOTICE.txt
 
+%mvn_file : %{short_name} %{name}
+%mvn_alias : %{short_name}:%{short_name}
+
 %build
-mvn-rpmbuild install javadoc:aggregate
+%mvn_build
 
 %install
-# jars
-install -d -m 755 %{buildroot}%{_javadir}
-install -p -m 644 target/%{short_name}-%{version}.jar \
-  %{buildroot}%{_javadir}/%{short_name}.jar
-ln -sf %{short_name}.jar %{buildroot}%{_javadir}/%{name}.jar
+%mvn_install
 
-# javadocs
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-# pom
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{short_name}.pom
-%add_maven_depmap JPP-%{short_name}.pom %{short_name}.jar -a "%{short_name}:%{short_name}"
-
-%files
+%files -f .mfiles
 %doc LICENSE.txt NOTICE.txt RELEASE-NOTES* aspell-mail.txt
-%{_mavendepmapfragdir}/*
-%{_mavenpomdir}/*
-%{_javadir}/*
 
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE.txt NOTICE.txt aspell-mail.txt
-%{_javadocdir}/%{name}
 
 %changelog
+* Mon Nov 17 2014 Mat Booth <mat.booth@redhat.com> - 1.10-1
+- Update to upstream version 1.10
+
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.9-5
+- Remove legacy Obsoletes/Provides for jakarta-commons
+
+* Wed Jul 30 2014 Mat Booth <mat.booth@redhat.com> - 1.9-4
+- Fix incorrect parent BR causing FTBFS
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.9-2
+- Use Requires: java-headless rebuild (#1067528)
+
+* Mon Jan  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.9-1
+- Update to upstream version 1.9
+- Update to current packaging guidelines
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -145,7 +133,7 @@ install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{short_name}.pom
 - Build with maven 3.
 - Adapt to current guidelines.
 
-* Thu Feb 10 2011 mbooth <mbooth@sd.matbooth.co.uk> 1.4-12
+* Thu Feb 10 2011 mbooth <fedora@matbooth.co.uk> 1.4-12
 - Drop versioned jars and javadocs.
 
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-11
@@ -262,3 +250,4 @@ install -p -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{short_name}.pom
 
 * Wed May 28 2003 Ville Skyttä <jpackage-discuss at zarb.org> - 0:1.1-1jpp
 - First JPackage release.
+
