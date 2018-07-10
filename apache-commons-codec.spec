@@ -4,7 +4,7 @@
 
 Name:          apache-%{short_name}
 Version:       1.10
-Release:       1.2
+Release:       1.3
 Group:         Development/Java
 Summary:       Implementations of common encoders and decoders
 License:       ASL 2.0
