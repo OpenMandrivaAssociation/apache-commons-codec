@@ -8,7 +8,7 @@ Release:       1.5
 Group:         Development/Java
 Summary:       Implementations of common encoders and decoders
 License:       ASL 2.0
-URL:           http://commons.apache.org/%{base_name}/
+URL:           https://commons.apache.org/%{base_name}/
 BuildArch:     noarch
 
 Source0:       http://archive.apache.org/dist/commons/%{base_name}/source/%{short_name}-%{version}-src.tar.gz
