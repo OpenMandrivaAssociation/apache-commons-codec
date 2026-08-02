@@ -3,8 +3,8 @@
 %global short_name commons-%{base_name}
 
 Name:          apache-%{short_name}
-Version:       1.10
-Release:       1.5
+Version:       1.20.0
+Release:       1
 Group:         Development/Java
 Summary:       Implementations of common encoders and decoders
 License:       ASL 2.0
@@ -43,7 +43,7 @@ Obsoletes: jakarta-%{short_name}-javadoc < %{version}-%{release}
 %{summary}.
 
 %prep
-%setup -q -n %{short_name}-%{version}-src
+%setup -q -n commons-codec-1.20.0-src
 cp %{SOURCE1} aspell-mail.txt
 sed -i 's/\r//' RELEASE-NOTES*.txt LICENSE.txt NOTICE.txt
 
