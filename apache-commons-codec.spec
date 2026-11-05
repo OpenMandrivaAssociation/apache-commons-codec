@@ -21,7 +21,7 @@ Source0:       https://archive.apache.org/dist/commons/%{base_name}/source/%{sho
 # The author gives MIT in e-mail communication.
 Source1:       aspell-mail.txt
 
-BuildRequires: mvn(org.apache.commons:commons-parent:pom:)
+BuildRequires: mvn(org.apache.commons:commons-parent:pom::)
 
 # It looks like there are packages in F-18 that BR/R the short name
 Provides: %{short_name} = %{version}-%{release}
