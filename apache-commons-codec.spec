@@ -10,6 +10,9 @@ Summary:       Implementations of common encoders and decoders
 License:       ASL 2.0
 URL:           https://commons.apache.org/%{base_name}/
 BuildArch:     noarch
+# Literal, so the first rpmbuild -bs records them before sysjar is installed.
+BuildRequires:	maven
+BuildRequires:	java-current-devel
 BuildSystem:	maven
 BuildOption(install):	--file-name %{short_name} --link %{name} --alias %{short_name}:%{short_name}
 
